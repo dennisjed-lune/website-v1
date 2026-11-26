@@ -631,8 +631,8 @@ if __name__ == "__main__":
     for slug, title, desc, body in PAGES:
         import hashlib
         ver = hashlib.md5((ROOT / "site.css").read_bytes() + (ROOT / "site.js").read_bytes()).hexdigest()[:8]
-        html = page(slug, title, desc, body).replace('href="site.css"', 'href="site.css?v=' + ver + '"').replace('src="site.js"', 'src="site.js?v=' + ver + '"')
-        (ROOT / slug).write_text(html, encoding="utf-8")
+        out = page(slug, title, desc, body).replace('href="site.css"', 'href="site.css?v=' + ver + '"').replace('src="site.js"', 'src="site.js?v=' + ver + '"')
+        (ROOT / slug).write_text(out, encoding="utf-8")
         bad += ste_check(slug, body)
         for src in set(re.findall(r'(?:src|href)="((?:img|ds)/[^"]+|[a-z-]+\.(?:html|css|js))(?:#[^"]*)?"', page(slug, title, desc, body))):
             if not (ROOT / src).exists():
