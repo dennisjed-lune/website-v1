@@ -36,7 +36,7 @@ def page(slug, title, desc, body):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{e(title)}</title>
+{'<base href="../">' if "/" in slug else ""}<title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
 <link rel="stylesheet" href="ds/tokens/fonts.css">
 <link rel="stylesheet" href="ds/tokens/colors.css">
@@ -66,7 +66,7 @@ def page(slug, title, desc, body):
       <a href="{LIVE}/lune-privacy">Privacy policy</a><a href="{LIVE}/terms">Terms</a></div>
     <div><b>Enrichment</b><a href="enrich.html">Enrich</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a><a href="ai.html">AI assistant</a></div>
     <div><b>Pulse</b><a href="pulse.html#how">How Pulse works</a><a href="pulse.html#merchant">For merchants</a><a href="pulse.html#bank">For banks</a><a href="pulse.html#customer">For cardholders</a></div>
-    <div><b>Company</b><a href="customers.html">Customers</a><a href="contact.html">Contact sales</a></div>
+    <div><b>Company</b><a href="customers.html">Customers</a><a href="blog.html">Blog</a><a href="contact.html">Contact sales</a></div>
     <div><b>Developers</b><a href="{DOCS_API}" target="_blank" rel="noopener">Enrichment API ↗</a><a href="{DOCS_SDK}" target="_blank" rel="noopener">Mobile SDK ↗</a><a href="{LUNEHUB}">Log in to LuneHub</a></div>
   </div>
 </footer>
@@ -666,6 +666,46 @@ CONTACT = f"""{hero("Contact sales", 'Talk to our sales team about <span class="
 </div></div>''')}
 """
 
+# ------------------------------------------------------------------ blog (imported from the old site, copy unchanged)
+import json, datetime
+POSTS = sorted((json.loads(f.read_text(encoding="utf-8")) for f in (ROOT / "blog_src").glob("*.json")),
+               key=lambda p: (p["date"], p["slug"]), reverse=True)
+
+
+def post_date(p):
+    if not p["date"]:
+        return ""
+    d = datetime.date.fromisoformat(p["date"])
+    return f"{d.day} {d.strftime('%B %Y')}"
+
+
+def post_card(p):
+    img = f'<img src="{p["image"]}" alt="" loading="lazy">' if p["image"] else ""
+    return (f'<a class="post-card" href="blog/{p["slug"]}.html"><span class="post-card__img">{img}</span>'
+            f'<span class="post-card__body"><small>{post_date(p)}</small><b>{e(p["title"])}</b><span>{e(p["desc"])}</span></span></a>')
+
+
+BLOG = f"""{hero("Blog", 'Articles on transaction data, <span class="serif">banking and rewards.</span>',
+ "News from Lune and guides for bank teams on enrichment, digital banking and open finance.", BTN_TALK)}
+{sec('<div class="post-grid">' + "".join(post_card(p) for p in POSTS) + "</div>", "sec--white")}
+{cta("See Lune on your own card data.", "Contact sales for a live demo on sample data.")}
+"""
+
+
+def post_page(p):
+    more = [x for x in POSTS if x["slug"] != p["slug"]][:3]
+    img = f'<figure class="post__img"><img src="{p["image"]}" alt=""></figure>' if p["image"] else ""
+    lead = f'<p class="lead">{e(p["desc"])}</p>' if p["desc"] else ""
+    return f"""<article class="post"><div class="wrap post__wrap">
+<header class="post__head"><a class="more" href="blog.html">← All articles</a><h1 class="h1--page">{e(p["title"])}</h1>{lead}<p class="small">Published on {post_date(p)}</p></header>
+{img}
+<div class="prose">{p["body"]}</div>
+</div></article>
+{sec(head("", "More articles") + '<div class="post-grid">' + "".join(post_card(x) for x in more) + "</div>", "sec--white")}
+{cta("See Lune on your own card data.", "Contact sales for a live demo on sample data.")}
+"""
+
+
 PAGES = [
     ("index.html", "Lune | More card revenue from every transaction", "Lune turns the card transactions you already process into new revenue. Know where your customers spend, and let merchants pay to reach them.", HOME),
     ("enrich.html", "Enrich | Real-time transaction enrichment API | Lune", "Enrich returns the merchant, logo and category for each card transaction in under a millisecond.", ENRICH),
@@ -676,7 +716,8 @@ PAGES = [
     ("pulse.html", "Pulse | Merchant-funded rewards under your bank's name | Lune", "Pulse is a rewards programme for your customers. Merchants fund the offers. Your bank approves them.", PULSE),
     ("customers.html", "Customers | Banks and fintechs on Lune", "Case studies from ADIB, D360 Bank, National Bank of Fujairah, Beyon Money and Alaan.", CUSTOMERS),
     ("contact.html", "Contact sales | Lune", "Talk to the Lune sales team about a live demo.", CONTACT),
-]
+    ("blog.html", "Blog | Lune", "Articles from Lune on transaction enrichment, digital banking, open finance and rewards.", BLOG),
+] + [(f"blog/{p['slug']}.html", f"{p['title']} | Lune", p["desc"], post_page(p)) for p in POSTS]
 
 
 # ------------------------------------------------------------------ copy check (STE)
@@ -707,8 +748,10 @@ if __name__ == "__main__":
             f = ROOT / m.group(2)
             return m.group(0) if not f.exists() else m.group(1) + m.group(2) + "?v=" + hashlib.md5(f.read_bytes()).hexdigest()[:8] + '"'
         out = re.sub(r'(src=")(img/[^"?]+)"', _imgv, out)
+        (ROOT / slug).parent.mkdir(parents=True, exist_ok=True)
         (ROOT / slug).write_text(out, encoding="utf-8")
-        bad += ste_check(slug, body)
+        if not slug.startswith("blog"):          # blog copy comes from the old site and stays as written
+            bad += ste_check(slug, body)
         for src in set(re.findall(r'(?:src|href)="((?:img|ds)/[^"]+|[a-z-]+\.(?:html|css|js))(?:#[^"]*)?"', page(slug, title, desc, body))):
             if not (ROOT / src).exists():
                 print(f"  MISSING {slug}: {src}"); bad += 1
