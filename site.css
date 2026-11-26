@@ -492,3 +492,6 @@ section.sec[id] { scroll-margin-top: calc(12px - clamp(64px, 8vw, 112px)); }
 .prose figcaption { font-size: 14px; color: var(--neutral-600); margin-top: 8px; }
 .prose table { width: 100%; border-collapse: collapse; font-size: 15.5px; display: block; overflow-x: auto; }
 .prose th, .prose td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--neutral-100); vertical-align: top; }
+
+/* Case study page: the page heading already has the title */
+.post .study > h3, .post .study > .tag { display: none; }

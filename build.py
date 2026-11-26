@@ -28,6 +28,14 @@ e = html.escape
 
 
 # ------------------------------------------------------------------ components
+SITE = "https://www.lunedata.io"          # the domain the site moves to. Page addresses there have no .html
+
+
+def canon(slug):
+    path = "" if slug == "index.html" else slug[:-5]
+    return f"{SITE}/{path}"
+
+
 def page(slug, title, desc, body):
     cur = ' aria-current="page"'
     nav = "".join(f'<a href="{h}"{cur if h == slug else ""}>{t}</a>' for h, t in NAV)
@@ -38,6 +46,11 @@ def page(slug, title, desc, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {'<base href="../">' if "/" in slug else ""}<title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{canon(slug)}">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{canon(slug)}">
+<meta property="og:type" content="{'article' if slug.startswith('blog/') else 'website'}">
 <link rel="stylesheet" href="ds/tokens/fonts.css">
 <link rel="stylesheet" href="ds/tokens/colors.css">
 <link rel="stylesheet" href="ds/tokens/typography.css">
@@ -617,13 +630,29 @@ STUDIES = [
 ]
 
 
-def study(s):
+CASE_SLUG = {"adib": "abu-dhabi-islamic-bank", "d360": "d360-bank", "nbf": "national-bank-of-fujairah",
+             "beyon-money": "beyon-money", "alaan": "alaan-pay"}
+
+
+def study(s, full=True):
     sid, logo, name, kind, title, dl, ch, dv, out, quote = s
     d = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in dl)
     q = f'<p style="font-weight:600;font-size:22px;line-height:1.3;color:var(--lune-teal)">{quote}</p>' if quote else ""
     return f"""<article class="card study" id="{sid}"><img class="logo" src="img/clients/{logo}" alt="{e(name)}"><span class="tag">{kind}</span><h3 class="h2" style="font-size:clamp(24px,2.4vw,34px)">{title}</h3>
 <dl>{d}</dl><div class="cols"><div><h4 style="margin:0 0 6px">The challenge</h4><p>{ch}</p></div><div><h4 style="margin:0 0 6px">What Lune delivered</h4><p>{dv}</p></div>
-<div><h4 style="margin:0 0 6px">The outcome</h4>{facts([(o, "") for o in out])}</div></div>{q}</article>"""
+<div><h4 style="margin:0 0 6px">The outcome</h4>{facts([(o, "") for o in out])}</div></div>{q}{f'<a class="more" href="case-studies/{CASE_SLUG[sid]}.html">Read the full case study →</a>' if full else ""}</article>"""
+
+
+def case_page(s):
+    import json
+    old = json.loads((ROOT / "case_src" / f"{CASE_SLUG[s[0]]}.json").read_text(encoding="utf-8"))
+    return f"""<article class="post"><div class="wrap post__wrap">
+<header class="post__head"><a class="more" href="customers.html">← All customers</a><h1 class="h1--page">{s[4]}</h1><p class="small">Case study · {s[3]}</p></header>
+<div style="width:100%;max-width:1000px">{study(s, full=False)}</div>
+<div class="prose">{old["body"]}</div>
+</div></article>
+{cta("See Lune on your own card data.", "Contact sales for a live demo on sample data.")}
+"""
 
 
 CUSTOMERS = f"""{hero("Customers", 'Banks and fintechs that <span class="serif">run on Lune data.</span>',
@@ -717,7 +746,13 @@ PAGES = [
     ("customers.html", "Customers | Banks and fintechs on Lune", "Case studies from ADIB, D360 Bank, National Bank of Fujairah, Beyon Money and Alaan.", CUSTOMERS),
     ("contact.html", "Contact sales | Lune", "Talk to the Lune sales team about a live demo.", CONTACT),
     ("blog.html", "Blog | Lune", "Articles from Lune on transaction enrichment, digital banking, open finance and rewards.", BLOG),
-] + [(f"blog/{p['slug']}.html", f"{p['title']} | Lune", p["desc"], post_page(p)) for p in POSTS]
+] + [(f"blog/{p['slug']}.html", f"{p['title']} | Lune", p["desc"], post_page(p)) for p in POSTS] \
+  + [(f"case-studies/{CASE_SLUG[s[0]]}.html", f"{s[2]} case study | Lune", s[4] + " " + s[6], case_page(s)) for s in STUDIES]
+
+# Old addresses that have no page of their own now. Each one sends the visitor to the nearest new page.
+REDIRECTS = [("products/enrich", "enrich"), ("products/engage", "expenses"), ("products/target", "analytics"), ("products/pulse", "pulse"),
+             ("industries/retail-banks", ""), ("industries/neo-banks-telco-wallets", ""), ("industries/fintechs", ""),
+             ("about", "customers"), ("careers", "contact"), ("case-studies", "customers"), ("blog/index", "blog")]
 
 
 # ------------------------------------------------------------------ copy check (STE)
@@ -750,10 +785,19 @@ if __name__ == "__main__":
         out = re.sub(r'(src=")(img/[^"?]+)"', _imgv, out)
         (ROOT / slug).parent.mkdir(parents=True, exist_ok=True)
         (ROOT / slug).write_text(out, encoding="utf-8")
-        if not slug.startswith("blog"):          # blog copy comes from the old site and stays as written
+        if not slug.startswith(("blog", "case-studies")):          # old-site copy stays as written
             bad += ste_check(slug, body)
         for src in set(re.findall(r'(?:src|href)="((?:img|ds)/[^"]+|[a-z-]+\.(?:html|css|js))(?:#[^"]*)?"', page(slug, title, desc, body))):
             if not (ROOT / src).exists():
                 print(f"  MISSING {slug}: {src}"); bad += 1
+    for old, new in REDIRECTS:
+        depth = "../" * old.count("/")
+        target = depth + (new + ".html" if new else "index.html")
+        (ROOT / f"{old}.html").parent.mkdir(parents=True, exist_ok=True)
+        (ROOT / f"{old}.html").write_text(f'<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Lune</title><link rel="canonical" href="{SITE}/{new}"><meta http-equiv="refresh" content="0; url={target}"><meta name="robots" content="noindex"></head><body><p><a href="{target}">This page moved. Continue to the new page.</a></p></body></html>', encoding="utf-8")
+    (ROOT / "_redirects").write_text("".join(f"/{o.replace('/index', '')} /{n} 301\n" for o, n in REDIRECTS if o != "blog/index"), encoding="utf-8")
+    urls = "".join(f"<url><loc>{canon(slug)}</loc></url>\n" for slug, *_ in PAGES)
+    (ROOT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n', encoding="utf-8")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
     print(f"built {len(PAGES)} pages, {bad} issue(s)")
     sys.exit(1 if bad else 0)
