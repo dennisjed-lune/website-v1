@@ -221,7 +221,7 @@ PROOF = '''
 <a class="case" href="customers.html#nbf"><span class="eyebrow">Case study · National Bank of Fujairah</span><b>NBF replaced manual data work with structured insight. →</b></a>
 </div></div>'''
 
-HOME = f"""<section class="hero"><div class="wrap hero__grid">
+HOME = f"""<section class="hero hero--home"><div class="wrap hero__grid">
   <div class="hero__copy">
     <h1>More card revenue.<br><span class="serif">From every transaction.</span></h1>
     <p class="lead">Lune turns the card transactions you already process into new revenue. Know where your customers spend, and let merchants pay to reach them.</p>

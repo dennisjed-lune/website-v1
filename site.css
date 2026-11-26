@@ -394,3 +394,10 @@ a.more:active, .site-nav a:active, .site-foot a:active, .case:active, .card--lin
 @container (max-width: 440px) { .ui .ui__th.num { white-space: normal; } .ui__table { table-layout: auto; } .ui__brand { min-width: 0; } }
 
 em, i, cite, address { font-style: normal; }
+
+/* Home hero: the hero and the logo strip fill the first window */
+@media (min-width: 981px) and (min-height: 640px) {
+  .hero--home { min-height: calc(100svh - 73px); display: flex; flex-direction: column; justify-content: space-between; padding-bottom: clamp(28px, 4vh, 48px); }
+  .hero--home .hero__grid { flex: 1; align-content: center; }
+  .hero--home .logos { margin-top: clamp(24px, 4vh, 56px); }
+}
