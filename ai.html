@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI assistant | Lune</title>
+<meta name="description" content="A conversational assistant inside Expenses and Cashflow. It answers from enriched transactions and shows Pulse offers.">
+<link rel="stylesheet" href="ds/tokens/fonts.css">
+<link rel="stylesheet" href="ds/tokens/colors.css">
+<link rel="stylesheet" href="ds/tokens/typography.css">
+<link rel="stylesheet" href="ds/tokens/spacing.css">
+<link rel="stylesheet" href="ds/tokens/base.css">
+<link rel="stylesheet" href="site.css?v=66198e02">
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap site-head__row">
+    <a class="brand" href="index.html"><i></i>Lune</a>
+    <nav class="site-nav" id="site-nav" aria-label="Main"><a href="enrich.html">Enrich</a><a href="pulse.html">Pulse</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a><a href="ai.html" aria-current="page">AI</a><a href="customers.html">Customers</a></nav>
+    <div class="site-head__end">
+      <a class="login" href="https://lunehub.lunedata.io/auth/login">Log in</a>
+      <a class="btn btn--dark btn--sm" href="contact.html">Talk to us</a>
+      <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">≡</button>
+    </div>
+  </div>
+</header>
+<main>
+<section class="hero"><div class="wrap hero__grid">
+  <div class="hero__copy"><h1 class="h1--page">Customers ask about their money.<br><span class="serif">The assistant answers.</span></h1><p class="lead">A conversational assistant runs inside Expenses and Cashflow in your app. It answers from the customer's enriched transactions and shows Pulse offers that match their spend.</p><div class="btns"><a class="btn btn--primary" href="contact.html">Talk to us</a><a class="btn btn--ghost" href="https://docs.lunedata.io/pfm-sdk/" target="_blank" rel="noopener">SDK docs ↗</a></div></div>
+  <figure class="chatphone">
+<div class="chatphone__screen">
+<div class="chatphone__top"><b>Assistant</b><span>Expenses</span></div>
+<div class="chat "><p class="chat__q">How much did I spend on shopping this month?</p><div class="chat__a"><p>You spent <b>AED 1,840</b> on shopping this month. Your top merchants are Level Shoes and IKEA.</p><div class="chat__row"><img src="img/logos/levelshoes.png?v=e015b6ed" alt="" width="36" height="36" loading="lazy"><span><b>Level Shoes</b><small>Shopping › Clothing</small></span><b class="chat__amt">AED 1,032.00</b></div><div class="chat__row"><img src="img/logos/ikea.png?v=be285dd0" alt="" width="36" height="36" loading="lazy"><span><b>IKEA</b><small>Shopping › Furniture</small></span><b class="chat__amt">AED 445.00</b></div><div class="chat__offer"><small>Offer for you</small><b>10% cashback</b><span>At Level Shoes, with your card</span><span class="chat__act">Activate offer</span></div></div></div>
+<div class="chat__chips"><span>Top merchants</span><span>Compare months</span><span>Offers for me</span></div>
+<div class="chat__input">Ask about your spending</div>
+</div>
+<figcaption>Illustration of the assistant with sample data.</figcaption>
+</figure>
+</div></section>
+
+<section class="sec sec--white"><div class="wrap stack">
+<div class="head"><h2>Each question gets an answer from real payments.</h2><p class="lead">Four example questions with sample data.</p></div>
+<div class="cols cols--2">
+<div class="chat chat--card"><p class="chat__q">How much did I spend on shopping this month?</p><div class="chat__a"><p>You spent <b>AED 1,840</b> on shopping this month.</p><div class="chat__row"><img src="img/logos/levelshoes.png?v=e015b6ed" alt="" width="36" height="36" loading="lazy"><span><b>Level Shoes</b><small>Shopping › Clothing</small></span><b class="chat__amt">AED 1,032.00</b></div><div class="chat__row"><img src="img/logos/ikea.png?v=be285dd0" alt="" width="36" height="36" loading="lazy"><span><b>IKEA</b><small>Shopping › Furniture</small></span><b class="chat__amt">AED 445.00</b></div></div></div>
+<div class="chat chat--card"><p class="chat__q">Where do I spend the most?</p><div class="chat__a"><p>Your top three merchants this month:</p><div class="chat__row"><img src="img/logos/carrefour.png?v=5315abb7" alt="" width="36" height="36" loading="lazy"><span><b>Carrefour</b><small>Groceries › Supermarkets</small></span><b class="chat__amt">AED 1,240.00</b></div><div class="chat__row"><img src="img/logos/levelshoes.png?v=e015b6ed" alt="" width="36" height="36" loading="lazy"><span><b>Level Shoes</b><small>Shopping › Clothing</small></span><b class="chat__amt">AED 1,032.00</b></div><div class="chat__row"><img src="img/logos/ikea.png?v=be285dd0" alt="" width="36" height="36" loading="lazy"><span><b>IKEA</b><small>Shopping › Furniture</small></span><b class="chat__amt">AED 445.00</b></div></div></div>
+<div class="chat chat--card"><p class="chat__q">Did I spend more than last month?</p><div class="chat__a"><p>No. You spent <b>AED 6,808</b> so far this month. That is <b>AED 187 less</b> than last month.</p><div class="chat__cmp"><span><small>This month</small><b>AED 6,808</b></span><span><small>Last month</small><b>AED 6,995</b></span></div></div></div>
+<div class="chat chat--card"><p class="chat__q">Are there offers for me?</p><div class="chat__a"><p>Yes. You spent <b>AED 1,032</b> at Level Shoes this month.</p><div class="chat__offer"><small>Offer for you</small><b>10% cashback</b><span>At Level Shoes, with your card</span><span class="chat__act">Activate offer</span></div></div></div>
+</div><p class="small">Illustration of the assistant with sample data.</p>
+</div></section>
+
+<section class="sec "><div class="wrap stack">
+<div class="head"><h2>The assistant uses products your bank controls.</h2></div>
+<div class="cols cols--4">
+<div class="card"><h3>In your app</h3><p>The assistant runs in the Lune SDK, inside Expenses and Cashflow. It uses your colours.</p></div>
+<div class="card"><h3>The customer's own data</h3><p>Each answer comes from that customer's enriched transactions.</p></div>
+<div class="card"><h3>Offers you approve</h3><p>The assistant shows Pulse offers. Your bank approves each offer.</p></div>
+<div class="card"><h3>Merchant-funded rewards</h3><p>The merchant funds each reward. Your bank uses no rewards budget.</p></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="cta"><h2>See the AI assistant in a sample bank app.</h2><div class="cta__end"><p>Contact sales for a live demo of the assistant on sample data.</p>
+<div class="btns"><a class="btn btn--ink" href="contact.html">Talk to us</a><a class="btn btn--ghost-ink" href="https://docs.lunedata.io/pfm-sdk/" target="_blank" rel="noopener">SDK docs ↗</a></div></div></div></div></section>
+
+</main>
+<footer class="site-foot">
+  <div class="wrap site-foot__grid">
+    <div><a class="brand" href="index.html" style="font-size:20px"><i style="width:24px;height:24px;box-shadow:inset -6px 0 0 #10A37F"></i>Lune</a><span class="muted" style="min-height:36px">© 2026 Lune Technologies</span>
+      <a href="https://www.lunedata.io/lune-privacy">Privacy policy</a><a href="https://www.lunedata.io/terms">Terms</a></div>
+    <div><b>Enrichment</b><a href="enrich.html">Enrich</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a><a href="ai.html">AI assistant</a></div>
+    <div><b>Pulse</b><a href="pulse.html#how">How Pulse works</a><a href="pulse.html#merchant">For merchants</a><a href="pulse.html#bank">For banks</a><a href="pulse.html#customer">For cardholders</a></div>
+    <div><b>Company</b><a href="customers.html">Customers</a><a href="contact.html">Contact sales</a></div>
+    <div><b>Developers</b><a href="https://docs.lunedata.io/enrichment/enrichment-api" target="_blank" rel="noopener">Enrichment API ↗</a><a href="https://docs.lunedata.io/pfm-sdk/" target="_blank" rel="noopener">Mobile SDK ↗</a><a href="https://lunehub.lunedata.io/auth/login">Log in to LuneHub</a></div>
+  </div>
+</footer>
+<script src="site.js?v=66198e02"></script>
+</body>
+</html>

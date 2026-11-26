@@ -16,7 +16,7 @@ LUNEHUB = "https://lunehub.lunedata.io/auth/login"
 LIVE = "https://www.lunedata.io"
 
 NAV = [("enrich.html", "Enrich"), ("pulse.html", "Pulse"), ("analytics.html", "Analytics"),
-       ("expenses.html", "Expenses"), ("cashflow.html", "Cashflow"), ("customers.html", "Customers")]
+       ("expenses.html", "Expenses"), ("cashflow.html", "Cashflow"), ("ai.html", "AI"), ("customers.html", "Customers")]
 
 CLIENTS = [("adib.avif", "ADIB"), ("cbd.svg", "Commercial Bank of Dubai"), ("ajman-bank.png", "Ajman Bank"),
            ("nbf.avif", "National Bank of Fujairah"), ("uab.jpg", "United Arab Bank"), ("nbb.avif", "National Bank of Bahrain"),
@@ -64,7 +64,7 @@ def page(slug, title, desc, body):
   <div class="wrap site-foot__grid">
     <div><a class="brand" href="index.html" style="font-size:20px"><i style="width:24px;height:24px;box-shadow:inset -6px 0 0 #10A37F"></i>Lune</a><span class="muted" style="min-height:36px">© 2026 Lune Technologies</span>
       <a href="{LIVE}/lune-privacy">Privacy policy</a><a href="{LIVE}/terms">Terms</a></div>
-    <div><b>Enrichment</b><a href="enrich.html">Enrich</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a></div>
+    <div><b>Enrichment</b><a href="enrich.html">Enrich</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a><a href="ai.html">AI assistant</a></div>
     <div><b>Pulse</b><a href="pulse.html#how">How Pulse works</a><a href="pulse.html#merchant">For merchants</a><a href="pulse.html#bank">For banks</a><a href="pulse.html#customer">For cardholders</a></div>
     <div><b>Company</b><a href="customers.html">Customers</a><a href="contact.html">Contact sales</a></div>
     <div><b>Developers</b><a href="{DOCS_API}" target="_blank" rel="noopener">Enrichment API ↗</a><a href="{DOCS_SDK}" target="_blank" rel="noopener">Mobile SDK ↗</a><a href="{LUNEHUB}">Log in to LuneHub</a></div>
@@ -430,6 +430,57 @@ CASHFLOW = f"""{hero("Cashflow", 'Show customers money in <span class="serif">ag
 
 # ------------------------------------------------------------------ PULSE
 PULSE_H1 = "Rewards under your bank's name. " + '<span class="serif">Merchants pay.</span>'
+# ---------- AI assistant ----------
+def chat_row(logo, name, cat, amt):
+    return (f'<div class="chat__row"><img src="img/logos/{logo}" alt="" width="36" height="36" loading="lazy">'
+            f'<span><b>{name}</b><small>{cat}</small></span><b class="chat__amt">{amt}</b></div>')
+
+
+CHAT_OFFER = ('<div class="chat__offer"><small>Offer for you</small><b>10% cashback</b><span>At Level Shoes, with your card</span>'
+              '<span class="chat__act">Activate offer</span></div>')
+ROW_LEVEL = chat_row("levelshoes.png", "Level Shoes", "Shopping › Clothing", "AED 1,032.00")
+ROW_IKEA = chat_row("ikea.png", "IKEA", "Shopping › Furniture", "AED 445.00")
+ROW_CARREFOUR = chat_row("carrefour.png", "Carrefour", "Groceries › Supermarkets", "AED 1,240.00")
+
+
+def chat(q, answer, extra="", cls=""):
+    return f'<div class="chat {cls}"><p class="chat__q">{q}</p><div class="chat__a"><p>{answer}</p>{extra}</div></div>'
+
+
+AI_HERO = f"""<figure class="chatphone">
+<div class="chatphone__screen">
+<div class="chatphone__top"><b>Assistant</b><span>Expenses</span></div>
+{chat("How much did I spend on shopping this month?", "You spent <b>AED 1,840</b> on shopping this month. Your top merchants are Level Shoes and IKEA.", ROW_LEVEL + ROW_IKEA + CHAT_OFFER)}
+<div class="chat__chips"><span>Top merchants</span><span>Compare months</span><span>Offers for me</span></div>
+<div class="chat__input">Ask about your spending</div>
+</div>
+<figcaption>Illustration of the assistant with sample data.</figcaption>
+</figure>"""
+
+CHAT_CMP = '<div class="chat__cmp"><span><small>This month</small><b>AED 6,808</b></span><span><small>Last month</small><b>AED 6,995</b></span></div>'
+
+AI = f"""{hero("AI assistant", 'Customers ask about their money.<br><span class="serif">The assistant answers.</span>',
+ "A conversational assistant runs inside Expenses and Cashflow in your app. It answers from the customer's enriched transactions and shows Pulse offers that match their spend.", BTN_TALK + BTN_SDK, AI_HERO)}
+
+{sec(head("What customers ask", "Each question gets an answer from real payments.", "Four example questions with sample data.") + f'''
+<div class="cols cols--2">
+{chat("How much did I spend on shopping this month?", "You spent <b>AED 1,840</b> on shopping this month.", ROW_LEVEL + ROW_IKEA, "chat--card")}
+{chat("Where do I spend the most?", "Your top three merchants this month:", ROW_CARREFOUR + ROW_LEVEL + ROW_IKEA, "chat--card")}
+{chat("Did I spend more than last month?", "No. You spent <b>AED 6,808</b> so far this month. That is <b>AED 187 less</b> than last month.", CHAT_CMP, "chat--card")}
+{chat("Are there offers for me?", "Yes. You spent <b>AED 1,032</b> at Level Shoes this month.", CHAT_OFFER, "chat--card")}
+</div><p class="small">Illustration of the assistant with sample data.</p>''', "sec--white")}
+
+{sec(head("For your bank", "The assistant uses products your bank controls.") + f'''
+<div class="cols cols--4">
+{card("", "In your app", "The assistant runs in the Lune SDK, inside Expenses and Cashflow. It uses your colours.")}
+{card("", "The customer's own data", "Each answer comes from that customer's enriched transactions.")}
+{card("", "Offers you approve", "The assistant shows Pulse offers. Your bank approves each offer.")}
+{card("", "Merchant-funded rewards", "The merchant funds each reward. Your bank uses no rewards budget.")}
+</div>''')}
+
+{cta("See the AI assistant in a sample bank app.", "Contact sales for a live demo of the assistant on sample data.", BTN_SDK)}
+"""
+
 BTN_HOW = '<a class="btn btn--ghost" href="#how">See how it works</a>'
 PULSE = f"""{hero("Pulse", PULSE_H1,
  "Pulse is a rewards programme for your customers: cashback or points, with tiers and missions. Merchants fund the offers. Your bank approves them.", BTN_TALK + BTN_HOW)}
@@ -602,6 +653,7 @@ PAGES = [
     ("analytics.html", "Analytics | Spend by merchant and category | Lune", "Analytics shows spend by merchant, category and customer from your enriched transactions.", ANALYTICS),
     ("expenses.html", "Expenses | Spending screens for your app | Lune", "Expenses adds ready spending screens to your iOS and Android app.", EXPENSES),
     ("cashflow.html", "Cashflow | Money in against money out | Lune", "Cashflow adds ready screens to your iOS and Android app.", CASHFLOW),
+    ("ai.html", "AI assistant | Lune", "A conversational assistant inside Expenses and Cashflow. It answers from enriched transactions and shows Pulse offers.", AI),
     ("pulse.html", "Pulse | Merchant-funded rewards under your bank's name | Lune", "Pulse is a rewards programme for your customers. Merchants fund the offers. Your bank approves them.", PULSE),
     ("customers.html", "Customers | Banks and fintechs on Lune", "Case studies from ADIB, D360 Bank, National Bank of Fujairah, Beyon Money and Alaan.", CUSTOMERS),
     ("contact.html", "Contact sales | Lune", "Talk to the Lune sales team about a live demo.", CONTACT),

@@ -411,3 +411,46 @@ em, i, cite, address { font-style: normal; }
 
 /* Anchor links land with the section heading just below the menu bar */
 section.sec[id] { scroll-margin-top: calc(12px - clamp(64px, 8vw, 112px)); }
+
+/* AI assistant: chat illustration */
+.chat { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.chat__q { margin: 0; justify-self: end; max-width: 85%; background: var(--lune-teal); color: #fff; padding: 11px 16px; border-radius: 18px 18px 4px 18px; font-size: 15px; font-weight: 500; line-height: 1.4; }
+.chat__a { display: grid; gap: 10px; background: var(--neutral-50); border-radius: 18px 18px 18px 4px; padding: 14px; max-width: 94%; min-width: 0; }
+.chat__a p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--lune-teal); }
+.chat__row { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--neutral-100); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+.chat__row img { width: 36px; height: 36px; border-radius: 9px; object-fit: contain; flex: none; background: #fff; }
+.chat__row span { display: grid; min-width: 0; flex: 1; }
+.chat__row b { font-size: 14.5px; font-weight: 600; color: var(--lune-teal); }
+.chat__row small { font-size: 12.5px; color: var(--neutral-600); }
+.chat__amt { flex: none; font-variant-numeric: tabular-nums; }
+.chat__offer { display: grid; gap: 2px; background: #E7F6EF; border-radius: 14px; padding: 14px; color: var(--lune-teal); }
+.chat__offer small { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--lune-teal-700); }
+.chat__offer b { font-size: 20px; font-weight: 700; }
+.chat__offer span { font-size: 13.5px; color: var(--neutral-700); }
+.chat__offer .chat__act { justify-self: start; margin-top: 8px; background: var(--lune-teal); color: #fff; font-weight: 600; font-size: 13.5px; padding: 8px 14px; border-radius: 999px; }
+.chat__cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chat__cmp span { display: grid; gap: 2px; background: #fff; border: 1px solid var(--neutral-100); border-radius: 14px; padding: 12px; }
+.chat__cmp small { font-size: 12.5px; color: var(--neutral-600); }
+.chat__cmp b { font-size: 17px; color: var(--lune-teal); font-variant-numeric: tabular-nums; }
+.chat--card { background: #fff; border: 1px solid var(--neutral-100); border-radius: 24px; padding: clamp(18px, 2vw, 28px); }
+.sec--white .chat--card { background: var(--neutral-25); }
+.sec--white .chat--card .chat__a { background: #fff; border: 1px solid var(--neutral-100); }
+.chat__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chat__chips span { font-size: 13px; font-weight: 600; color: var(--lune-teal); border: 1px solid var(--neutral-200); border-radius: 999px; padding: 6px 12px; background: #fff; }
+.chat__input { border: 1px solid var(--neutral-200); border-radius: 999px; padding: 12px 16px; font-size: 14px; color: var(--neutral-600); background: #fff; }
+.chatphone { margin: 0; display: grid; gap: 14px; justify-items: center; background: linear-gradient(140deg, #D9F2E6 0%, #EEF2F1 55%, #E6ECEA 100%); border-radius: 24px; padding: clamp(20px, 3vw, 36px); min-width: 0; }
+.chatphone__screen { width: 100%; max-width: 400px; background: #fff; border-radius: 28px; padding: 18px; display: grid; gap: 14px; box-shadow: 0 14px 32px -16px rgba(7,3,18,0.28); min-width: 0; }
+.chatphone__top { display: flex; align-items: baseline; justify-content: space-between; padding: 2px 4px 10px; border-bottom: 1px solid var(--neutral-100); }
+.chatphone__top b { font-size: 17px; color: var(--lune-teal); }
+.chatphone__top span { font-size: 13px; color: var(--neutral-600); }
+.chatphone figcaption { font-size: 13.5px; color: var(--neutral-600); text-align: center; }
+@media (max-width: 560px) {
+  .chatphone { padding: 12px; }
+  .chatphone__screen { padding: 14px; border-radius: 22px; }
+  .chat__a { max-width: 100%; padding: 12px; }
+  .chat__row { gap: 10px; padding: 10px; }
+  .chat__row img { width: 32px; height: 32px; }
+  .chat__row b { font-size: 13.5px; }
+  .chat__row small { font-size: 12px; }
+  .chat--card { padding: 14px; border-radius: 20px; }
+}
