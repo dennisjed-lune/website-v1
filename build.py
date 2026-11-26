@@ -76,7 +76,7 @@ def page(slug, title, desc, body):
 <footer class="site-foot">
   <div class="wrap site-foot__grid">
     <div><a class="brand" href="index.html" style="font-size:20px"><i style="width:24px;height:24px;box-shadow:inset -6px 0 0 #10A37F"></i>Lune</a><span class="muted" style="min-height:36px">© 2026 Lune Technologies</span>
-      <a href="{LIVE}/lune-privacy">Privacy policy</a><a href="{LIVE}/terms">Terms</a></div>
+      <a href="lune-privacy.html">Privacy policy</a><a href="terms.html">Terms</a><a href="cookie.html">Cookie policy</a></div>
     <div><b>Enrichment</b><a href="enrich.html">Enrich</a><a href="analytics.html">Analytics</a><a href="expenses.html">Expenses</a><a href="cashflow.html">Cashflow</a><a href="ai.html">AI assistant</a></div>
     <div><b>Pulse</b><a href="pulse.html#how">How Pulse works</a><a href="pulse.html#merchant">For merchants</a><a href="pulse.html#bank">For banks</a><a href="pulse.html#customer">For cardholders</a></div>
     <div><b>Company</b><a href="customers.html">Customers</a><a href="blog.html">Blog</a><a href="contact.html">Contact sales</a></div>
@@ -683,7 +683,7 @@ CONTACT = f"""{hero("Contact sales", 'Talk to our sales team about <span class="
 </div>
 <fieldset class="field" data-field="product"><legend>What do you want to see?</legend><div class="checks">{"".join(f'<label><input type="checkbox" name="product" value="{p}">{p}</label>' for p in PRODUCTS)}</div><span class="err">Select at least one product.</span></fieldset>
 <div class="field"><label for="f-notes">Other information for our sales team (optional)</label><textarea id="f-notes" name="notes"></textarea></div>
-<p class="small">We use your details only to reply to this request. See our <a href="{LIVE}/lune-privacy">privacy policy</a>.</p>
+<p class="small">We use your details only to reply to this request. See our <a href="lune-privacy.html">privacy policy</a>.</p>
 <div><button class="btn btn--primary" type="submit">Send request</button></div>
 <p id="form-done" hidden><b>Your email app opens with the request.</b> Send the email to complete the request.</p>
 </form>
@@ -749,6 +749,21 @@ PAGES = [
 ] + [(f"blog/{p['slug']}.html", f"{p['title']} | Lune", p["desc"], post_page(p)) for p in POSTS] \
   + [(f"case-studies/{CASE_SLUG[s[0]]}.html", f"{s[2]} case study | Lune", s[4] + " " + s[6], case_page(s)) for s in STUDIES]
 
+# Legal pages: text from the old site, unchanged
+LEGAL = [json.loads((ROOT / "legal_src" / f"{n}.json").read_text(encoding="utf-8")) for n in ("terms", "lune-privacy", "cookie", "msa", "msa-secan")]
+
+
+def legal_page(d):
+    intro = "".join(f'<p class="small">{e(x)}</p>' for x in d["intro"])
+    return f"""<article class="post"><div class="wrap post__wrap">
+<header class="post__head"><h1 class="h1--page">{e(d["h1"])}</h1>{intro}</header>
+<div class="prose prose--legal">{d["body"]}</div>
+</div></article>
+"""
+
+
+PAGES += [(f"{d['slug']}.html", d["title"], d["desc"], legal_page(d)) for d in LEGAL]
+
 # Old addresses that have no page of their own now. Each one sends the visitor to the nearest new page.
 REDIRECTS = [("products/enrich", "enrich"), ("products/engage", "expenses"), ("products/target", "analytics"), ("products/pulse", "pulse"),
              ("industries/retail-banks", ""), ("industries/neo-banks-telco-wallets", ""), ("industries/fintechs", ""),
@@ -785,7 +800,7 @@ if __name__ == "__main__":
         out = re.sub(r'(src=")(img/[^"?]+)"', _imgv, out)
         (ROOT / slug).parent.mkdir(parents=True, exist_ok=True)
         (ROOT / slug).write_text(out, encoding="utf-8")
-        if not slug.startswith(("blog", "case-studies")):          # old-site copy stays as written
+        if not slug.startswith(("blog", "case-studies", "terms", "lune-privacy", "cookie", "msa")):          # old-site copy stays as written
             bad += ste_check(slug, body)
         for src in set(re.findall(r'(?:src|href)="((?:img|ds)/[^"]+|[a-z-]+\.(?:html|css|js))(?:#[^"]*)?"', page(slug, title, desc, body))):
             if not (ROOT / src).exists():

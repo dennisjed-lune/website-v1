@@ -495,3 +495,13 @@ section.sec[id] { scroll-margin-top: calc(12px - clamp(64px, 8vw, 112px)); }
 
 /* Case study page: the page heading already has the title */
 .post .study > h3, .post .study > .tag { display: none; }
+
+/* Legal pages */
+.prose--legal { font-size: 16.5px; line-height: 1.65; max-width: 800px; }
+.prose--legal h2 { font-size: clamp(22px, 2.2vw, 28px); }
+.prose--legal h3 { font-size: 20px; }
+.prose--legal ol ol, .prose--legal ul ul, .prose--legal ol ul, .prose--legal ul ol { margin-top: 0.5em; }
+.prose--legal table { font-size: 14.5px; }
+.prose--legal th { color: var(--lune-teal); font-weight: 600; background: var(--neutral-50); }
+.post__wrap { grid-template-columns: minmax(0, 1fr); }
+.post__head h1 { overflow-wrap: break-word; }
