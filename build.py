@@ -165,6 +165,42 @@ FLOW = """<div class="flow">
 <div class="flow__step flow__step--end"><span class="n">04</span><h3>Cashback recorded</h3><span class="big">AED 103.20</span><span class="v">The merchant pays the cashback. Your bank uses no rewards budget.</span></div>
 </div><p class="small">Example transaction.</p>"""
 
+# ---------- AI assistant ----------
+def chat_row(logo, name, cat, amt):
+    return (f'<div class="chat__row"><img src="img/logos/{logo}" alt="" width="36" height="36" loading="lazy">'
+            f'<span><b>{name}</b><small>{cat}</small></span><b class="chat__amt">{amt}</b></div>')
+
+
+CHAT_OFFER = ('<div class="chat__offer"><small>Offer for you</small><b>10% cashback</b><span>At Level Shoes, with your card</span>'
+              '<span class="chat__act">Activate offer</span></div>')
+ROW_LEVEL = chat_row("levelshoes.png", "Level Shoes", "Shopping › Clothing", "AED 1,032.00")
+ROW_IKEA = chat_row("ikea.png", "IKEA", "Shopping › Furniture", "AED 445.00")
+ROW_CARREFOUR = chat_row("carrefour.png", "Carrefour", "Groceries › Supermarkets", "AED 1,240.00")
+
+
+def chat(q, answer, extra="", cls=""):
+    return f'<div class="chat {cls}"><p class="chat__q">{q}</p><div class="chat__a"><p>{answer}</p>{extra}</div></div>'
+
+
+AI_HERO = f"""<figure class="chatphone">
+<div class="chatphone__screen">
+<div class="chatphone__top"><b>Assistant</b><span>Expenses</span></div>
+{chat("How much did I spend on shopping this month?", "You spent <b>AED 1,840</b> on shopping this month. Your top merchants are Level Shoes and IKEA.", ROW_LEVEL + ROW_IKEA + CHAT_OFFER)}
+<div class="chat__chips"><span>Top merchants</span><span>Compare months</span><span>Offers for me</span></div>
+<div class="chat__input">Ask about your spending</div>
+</div>
+<figcaption>Illustration of the assistant with sample data.</figcaption>
+</figure>"""
+
+AI_SWITCH = f"""<figure class="chatphone chatphone--solo">
+<div class="chatphone__screen">
+<div class="chatphone__top"><b>Assistant</b><span>Expenses</span></div>
+{chat("How much did I spend on shopping this month?", "You spent <b>AED 1,840</b> on shopping this month.", ROW_LEVEL + ROW_IKEA + CHAT_OFFER)}
+</div>
+<figcaption>The assistant in the Lune SDK. Illustration with sample data.</figcaption>
+</figure>"""
+
+
 PRODUCTS = [
     ("Enrich", "Each card description gets a merchant name.",
      "Enrich returns the merchant, logo and category for each transaction. Your team sees the result in LuneHub.",
@@ -191,6 +227,11 @@ PRODUCTS = [
      [("Total cashflow", "Money in against money out"), ("Money in", "Sources and transfers in"), ("Trends", "Six months of history")],
      ("cashflow.html", "See all Cashflow screens"),
      ("phone", "cf-home.png", "", "The Cashflow home screen from the Lune SDK.", "Cashflow home screen with money in and money out this month")),
+    ("AI", "Customers ask about their money. The assistant answers.",
+     "A conversational assistant runs inside Expenses and Cashflow in your app. It answers from the customer's enriched transactions.",
+     [("Answers", "From the customer's own payments"), ("Merchants", "Real names and logos"), ("Offers", "Pulse offers that match their spend")],
+     ("ai.html", "See the AI assistant"),
+     ("html", AI_SWITCH, "", "", "")),
 ]
 
 
@@ -200,7 +241,9 @@ def tabs_block():
     for i, (_, title, body, kv, link, fig) in enumerate(PRODUCTS):
         rows = "".join(f"<div><b>{k}</b><span>{v}</span></div>" for k, v in kv)
         kind, img, bar, cap, alt = fig
-        if kind == "shot":
+        if kind == "html":
+            figure = img
+        elif kind == "shot":
             figure = shot(img, bar, cap + " " + TEST, alt)
         else:
             figure = f'<figure class="phone phone--solo"><img src="img/app/{img}" alt="{e(alt)}" loading="lazy"><figcaption><span>{cap} Sample data.</span></figcaption></figure>'
@@ -208,7 +251,7 @@ def tabs_block():
         panels += f"""<div class="panel prod" role="tabpanel" id="prod-{i}" aria-labelledby="prod-tab-{i}"{hidden}>
 <div class="feature__copy"><h3 class="h2" style="font-size:clamp(26px,2.6vw,38px)">{title}</h3><p class="lead">{body}</p><div class="kv">{rows}</div><a class="more" href="{link[0]}">{link[1]} →</a></div>
 {figure}</div>"""
-    return f"""{head("The platform", "Five products. One set of card data.", "Start with one product and add the others later. Each one runs on the same enriched transactions.")}
+    return f"""{head("The platform", "Six products. One set of card data.", "Start with one product and add the others later. Each one runs on the same enriched transactions.")}
 <div class="switch"><div class="switch__bar"><div class="tabs" role="tablist" aria-label="Product">{tabs}</div></div>{panels}</div>"""
 
 
@@ -246,7 +289,7 @@ HOME = f"""<section class="hero hero--home"><div class="wrap hero__grid">
 {sec(head("How Lune grows card revenue", "Three revenue levers. One enriched data set.", "Each lever uses the same enriched transactions. Start with one lever and add the others later.") + f'''
 <div class="cols">
 {card("Card spend", "Rewards that merchants pay for", "Pulse runs a rewards programme under your bank's name. Merchants fund each offer. Customers earn when they pay with your card.", ["A reason to pay with your card", "No rewards budget from the bank", "Your bank approves each offer"], "Cards and loyalty teams", ("pulse.html", "See Pulse"))}
-{card("Card usage", "Spending screens for your app", "Expenses and Cashflow add ready screens to your iOS and Android app. Customers see each merchant, category and trend.", ["Real merchant names and logos", "Spend by category and merchant", "Money in against money out"], "Digital and product teams", ("expenses.html", "See Expenses"))}
+{card("Card usage", "Spending screens for your app", "Expenses and Cashflow add ready screens to your iOS and Android app. The AI assistant answers questions about spend.", ["Real merchant names and logos", "Money in against money out", "Answers from the customer's own payments"], "Digital and product teams", ("expenses.html", "See Expenses"))}
 {card("Targeting", "Spend data your teams can use", "Analytics shows spend by merchant, category and customer. Your team finds the merchants where your customers spend most.", ["Brand and category explorers", "Spend per customer", "Merchants to bring into Pulse"], "Cards, data and partnership teams", ("analytics.html", "See Analytics"))}
 </div>
 <div class="band"><span class="eyebrow">The foundation</span><span><b>Enrich API</b> · real time, 0.5 ms</span><span><b>LuneHub</b> · one portal for your teams</span><span><b>Mobile SDK</b> · iOS and Android</span><span><b>Hosted in UAE and KSA</b></span><a class="more" href="enrich.html" style="padding:0">See Enrich →</a></div>''', id_="revenue")}
@@ -399,6 +442,7 @@ EXPENSES = f"""{hero("Expenses", 'Show customers where <span class="serif">their
 {card("", "Search and filter", "Search by merchant, category or amount. Filter the list by category or tag.")}
 {card("", "Budgets", "Budgets by category or in total, with progress for the month.")}
 {card("", "Feedback", "A customer can report a wrong merchant or category on a transaction.")}
+{card("", "AI assistant", "A customer asks a question about spend. The assistant answers from their payments.", link=("ai.html", "See the AI assistant"))}
 </div>''', "sec--white")}
 
 {sec(head("In your app", "Native screens for iOS and Android.") + IN_APP)}
@@ -421,6 +465,7 @@ CASHFLOW = f"""{hero("Cashflow", 'Show customers money in <span class="serif">ag
 {card("", "Inflow and outflow", "Money in and money out for a period, with transaction counts.")}
 {card("", "Smart insights", "Insights in plain language, such as the cashflow summary.")}
 {card("", "Cashflow history", "A timeline of inflow and outflow, month by month.")}
+{card("", "AI assistant", "A customer asks a question about money in or money out. The assistant answers from their payments.", link=("ai.html", "See the AI assistant"))}
 </div>''')}
 
 {sec(head("In your app", "Native screens for iOS and Android.") + IN_APP, "sec--white")}
@@ -430,33 +475,7 @@ CASHFLOW = f"""{hero("Cashflow", 'Show customers money in <span class="serif">ag
 
 # ------------------------------------------------------------------ PULSE
 PULSE_H1 = "Rewards under your bank's name. " + '<span class="serif">Merchants pay.</span>'
-# ---------- AI assistant ----------
-def chat_row(logo, name, cat, amt):
-    return (f'<div class="chat__row"><img src="img/logos/{logo}" alt="" width="36" height="36" loading="lazy">'
-            f'<span><b>{name}</b><small>{cat}</small></span><b class="chat__amt">{amt}</b></div>')
-
-
-CHAT_OFFER = ('<div class="chat__offer"><small>Offer for you</small><b>10% cashback</b><span>At Level Shoes, with your card</span>'
-              '<span class="chat__act">Activate offer</span></div>')
-ROW_LEVEL = chat_row("levelshoes.png", "Level Shoes", "Shopping › Clothing", "AED 1,032.00")
-ROW_IKEA = chat_row("ikea.png", "IKEA", "Shopping › Furniture", "AED 445.00")
-ROW_CARREFOUR = chat_row("carrefour.png", "Carrefour", "Groceries › Supermarkets", "AED 1,240.00")
-
-
-def chat(q, answer, extra="", cls=""):
-    return f'<div class="chat {cls}"><p class="chat__q">{q}</p><div class="chat__a"><p>{answer}</p>{extra}</div></div>'
-
-
-AI_HERO = f"""<figure class="chatphone">
-<div class="chatphone__screen">
-<div class="chatphone__top"><b>Assistant</b><span>Expenses</span></div>
-{chat("How much did I spend on shopping this month?", "You spent <b>AED 1,840</b> on shopping this month. Your top merchants are Level Shoes and IKEA.", ROW_LEVEL + ROW_IKEA + CHAT_OFFER)}
-<div class="chat__chips"><span>Top merchants</span><span>Compare months</span><span>Offers for me</span></div>
-<div class="chat__input">Ask about your spending</div>
-</div>
-<figcaption>Illustration of the assistant with sample data.</figcaption>
-</figure>"""
-
+# ---------- AI assistant page ----------
 CHAT_CMP = '<div class="chat__cmp"><span><small>This month</small><b>AED 6,808</b></span><span><small>Last month</small><b>AED 6,995</b></span></div>'
 
 AI = f"""{hero("AI assistant", 'Customers ask about their money.<br><span class="serif">The assistant answers.</span>',
@@ -615,7 +634,7 @@ CUSTOMERS = f"""{hero("Customers", 'Banks and fintechs that <span class="serif">
 """
 
 # ------------------------------------------------------------------ CONTACT
-PRODUCTS = ["Enrich", "Analytics", "Expenses", "Cashflow", "Pulse", "Not sure yet"]
+PRODUCTS = ["Enrich", "Pulse", "Analytics", "Expenses", "Cashflow", "AI assistant", "Not sure yet"]
 COUNTRIES = ["United Arab Emirates", "Saudi Arabia", "Bahrain", "Qatar", "Kuwait", "Oman", "Egypt", "Jordan", "Other"]
 CONTACT = f"""{hero("Contact sales", 'Talk to our sales team about <span class="serif">a live demo.</span>',
  "Tell us about your bank and what you want to see. We show Lune on sample data, then on a sample of your own transactions.", "")}

@@ -383,7 +383,7 @@ a.more:active, .site-nav a:active, .site-foot a:active, .case:active, .card--lin
   .panel.prod .phone--solo img { max-height: 52svh; width: auto; }
 }
 @media (max-width: 560px) {
-  .switch .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .switch .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
   .switch .tab { padding: 0 2px; font-size: 12.5px; letter-spacing: -0.01em; }
   .panel.prod { padding: 12px; }
   .panel.prod .ui:has(.ui__kpis) .ui__table { display: none; }
@@ -454,3 +454,8 @@ section.sec[id] { scroll-margin-top: calc(12px - clamp(64px, 8vw, 112px)); }
   .chat__row small { font-size: 12px; }
   .chat--card { padding: 14px; border-radius: 20px; }
 }
+
+/* AI in the product switcher */
+.chatphone--solo .chatphone__screen { max-width: 380px; }
+@media (min-width: 981px) { .panel.prod .chatphone--solo .chat__offer { padding: 12px; } }
+@media (max-width: 980px) { .panel.prod .chatphone--solo .chat__row:nth-of-type(2) { display: none; } }
