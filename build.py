@@ -632,6 +632,10 @@ if __name__ == "__main__":
         import hashlib
         ver = hashlib.md5((ROOT / "site.css").read_bytes() + (ROOT / "site.js").read_bytes()).hexdigest()[:8]
         out = page(slug, title, desc, body).replace('href="site.css"', 'href="site.css?v=' + ver + '"').replace('src="site.js"', 'src="site.js?v=' + ver + '"')
+        def _imgv(m):
+            f = ROOT / m.group(2)
+            return m.group(0) if not f.exists() else m.group(1) + m.group(2) + "?v=" + hashlib.md5(f.read_bytes()).hexdigest()[:8] + '"'
+        out = re.sub(r'(src=")(img/[^"?]+)"', _imgv, out)
         (ROOT / slug).write_text(out, encoding="utf-8")
         bad += ste_check(slug, body)
         for src in set(re.findall(r'(?:src|href)="((?:img|ds)/[^"]+|[a-z-]+\.(?:html|css|js))(?:#[^"]*)?"', page(slug, title, desc, body))):
